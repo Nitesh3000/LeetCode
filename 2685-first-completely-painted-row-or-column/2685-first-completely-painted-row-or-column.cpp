@@ -7,22 +7,19 @@ public:
         vector<int> r(mat.size(),0);
         vector<int> c(mat[0].size(),0);
 
-        unordered_map<int,vector<int>> m;
+        vector<pair<int, int>> positions(rows * cols + 1);
         for(int i = 0;i<mat.size();i++){
             for(int j = 0;j<mat[0].size();j++){
-                m[mat[i][j]] = {i,j};
+                positions[mat[i][j]] = {i,j};
             }
         }
-        int i = 0;
-        for(auto a:arr){
-            int row = (m[a])[0];
-            int col = (m[a])[1];
+        for (int i = 0; i < arr.size(); ++i) {
+            auto [row, col] = positions[arr[i]];
             r[row]++;
             c[col]++;
             if(r[row]==cols || c[col]==rows){
                 return i;
             }
-            i++;
         }
         return 0;
         
