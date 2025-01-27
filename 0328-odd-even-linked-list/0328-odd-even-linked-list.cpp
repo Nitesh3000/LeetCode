@@ -26,7 +26,6 @@ public:
             first->next = second->next;
             second = first->next;
             first = temp;
-            
             i++;
         }
         if(i%2 == 0)
