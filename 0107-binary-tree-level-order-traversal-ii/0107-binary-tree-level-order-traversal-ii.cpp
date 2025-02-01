@@ -14,32 +14,31 @@ public:
     vector<vector<int>> levelOrderBottom(TreeNode* root) {
         vector<vector<int>> res;
         if(root == nullptr){
-            return res ;
+            return res;
         }
+        int currLevel = 1;
+        int nextLevel = 0;
         queue<TreeNode*> q;
-        q.push(root);
-        
         vector<int> temp;
-        int numCurrent = 1;
-        int numChild = 0;
+        q.push(root);
         while(!q.empty()){
-            TreeNode* node = q.front();
+            auto node = q.front();
             q.pop();
-            numCurrent--;
+            currLevel--;
             temp.push_back(node->val);
-            if(node->left!=nullptr){
+            if(node->left != nullptr){
                 q.push(node->left);
-                numChild++;
+                nextLevel++;
             }
-            if(node->right!=nullptr){
+            if(node->right != nullptr){
                 q.push(node->right);
-                numChild++;
+                nextLevel++;
             }
-            if(numCurrent == 0){
-                numCurrent = numChild;
-                numChild = 0;
+            if(currLevel == 0){
                 res.insert(res.begin(),temp);
                 temp.clear();
+                currLevel = nextLevel;
+                nextLevel = 0;
             }
         }
         return res;
