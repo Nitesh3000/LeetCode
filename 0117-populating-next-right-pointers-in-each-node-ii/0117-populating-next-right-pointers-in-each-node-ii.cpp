@@ -19,48 +19,37 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        if(root==nullptr){
+        if(root == nullptr){
             return root;
         }
         queue<Node*> q;
-       
-        int nextLevel = 0, currentLevel = 1;
+        int currLevel = 1;
+        int nextLevel = 0;
         q.push(root);
-        Node* prevNode = nullptr;
+        Node* prev = nullptr;
         while(!q.empty()){
-            auto temp = q.front();
+            auto node = q.front();
             q.pop();
-            currentLevel--;
-
-            if(temp->left!=nullptr){
-                q.push(temp->left);
-                nextLevel++;
-                if(prevNode){
-                    prevNode->next = temp->left;
-                     
-                }
-                prevNode = temp->left;
-                // temp->left->next = temp->right;
-
+            currLevel--;
+            if(prev!=nullptr){
+                prev->next = node;
             }
-            if(temp->right!=nullptr){
-                q.push(temp->right);
+            prev = node;
+            if(node->left != nullptr){
+                q.push(node->left);
                 nextLevel++;
-                if(prevNode){
-                    prevNode->next = temp->right;
-                     
-                }
-                prevNode = temp->right;
             }
-            
-            if(currentLevel == 0){
-                currentLevel = nextLevel;
+            if(node->right!=nullptr){
+                q.push(node->right);
+                nextLevel++;
+            }
+            if(currLevel == 0){
+                node->next = nullptr;
+                prev = nullptr;
+                currLevel = nextLevel;
                 nextLevel = 0;
-                prevNode = nullptr;
             }
-
         }
-        
         return root;
     }
 };
