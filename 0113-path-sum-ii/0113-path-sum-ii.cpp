@@ -13,33 +13,30 @@ class Solution {
 public:
     vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
         vector<vector<int>> res;
-        if(root==nullptr) return res;
-
-        vector<int> resPath;
-        stack<pair<vector<int>,pair<TreeNode*,int>>> st;
-        st.push({{root->val},{root,root->val}});
+        if(root == nullptr){
+            return res;
+        }
+        stack<pair<TreeNode*,pair<vector<int>,int>>> st;
+        vector<int> currPath = {root->val};
+        st.push({root,{{},0}});
         while(!st.empty()){
-            TreeNode* node = st.top().second.first;
-            vector<int> path = st.top().first;
-            int currentSum = st.top().second.second;
+            auto temp = st.top();
+            auto node = temp.first;
+            auto path = temp.second.first;
+            auto sum = temp.second.second;
             st.pop();
-            // currentSum+=node->val;
-            // path.push_back(node->val);
-            if(node->left==nullptr && node->right == nullptr && currentSum == targetSum){
-                
-                res.push_back(path);
+            path.push_back(node->val);
+            if(node->val + sum == targetSum){
+                if(node->left == nullptr && node->right == nullptr){
+                    res.push_back(path);
+                }
             }
-            if(node->left!=nullptr){
-                vector<int> tempPath = path;
-                tempPath.push_back(node->left->val);
-                st.push({tempPath,{node->left,currentSum+node->left->val}});
+            if(node->right != nullptr){
+                st.push({node->right,{path,sum+node->val}});
             }
-            if(node->right!=nullptr){
-                vector<int> tempPath = path;
-                tempPath.push_back(node->right->val);
-                st.push({tempPath,{node->right,currentSum+node->right->val}});
+            if(node->left != nullptr){
+                st.push({node->left,{path,sum+node->val}});
             }
-
         }
         return res;
     }
