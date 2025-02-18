@@ -1,44 +1,42 @@
 class Solution {
 private:
-    vector<vector<int>> createList(int numCourses, vector<vector<int>>& prerequisites) {
-        
-        vector<vector<int>> adList(numCourses);
-        for (auto it : prerequisites) {
-            adList[it[1]].push_back(it[0]); // it[1] -> it[0]
+    vector<vector<int>> makeAdjList(int numCourses,vector<vector<int>>& prerequisites){
+        vector<vector<int>> adjList(numCourses);
+        for(auto& courses: prerequisites){
+            adjList[courses[1]].push_back(courses[0]);
         }
-        return adList;
+        return adjList;
     }
 
-    //detect cycles
-    bool dfs(int node, vector<bool>& visited, vector<bool>& pathVisited, vector<vector<int>>& adList) {
-        visited[node] = true;
-        pathVisited[node] = true;
-        for (int neighbor : adList[node]) {
-            if (!visited[neighbor]) {
-                if (dfs(neighbor, visited, pathVisited, adList)) {
-                    return true; // Cycle detected
+    bool dfs(vector<vector<int>>& adjList, vector<int>& visited, vector<int>& pathVisited,int node){
+        visited[node] = 1;
+        pathVisited[node] = 1;
+        for(int neighbor : adjList[node]){
+            if(!visited[neighbor]){
+                if(dfs(adjList, visited, pathVisited, neighbor)){
+                    return true;
                 }
-            } else if (pathVisited[neighbor]) {
-                return true; // Back edge found, cycle detected
             }
+            else if(pathVisited[neighbor]){
+                return true;
+            }
+            
         }
-        pathVisited[node] = false; // Backtrack
+        pathVisited[node] = 0;
         return false;
     }
-
 public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<vector<int>> adjList = createList(numCourses, prerequisites);
-        vector<bool> visited(numCourses, false);
-        vector<bool> pathVisited(numCourses, false);
-
-        for (int i = 0; i < numCourses; i++) {
-            if (!visited[i]) {
-                if (dfs(i, visited, pathVisited, adjList)) {
-                    return false; // If a cycle is detected, return false
-                }
+        vector<vector<int>> adjList = makeAdjList(numCourses,prerequisites);
+        vector<int> visited(numCourses, 0);
+        vector<int> pathVisited(numCourses, 0);
+        for(int i = 0;i<numCourses;i++){
+            if(!visited[i]){
+                if(dfs(adjList, visited, pathVisited,i))
+                    return false;
             }
+    
         }
-        return true; // No cycles detected, so all courses can be finished
+        return true;
     }
 };
